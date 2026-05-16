@@ -6,7 +6,7 @@ Universal JavaScript client for the Stactics ingest API.
 import { StacticsClient } from "@stactics/js";
 
 const stactics = new StacticsClient({
-  apiKey: "st_live_...",
+  apiKey: "pk_...",
 });
 
 await stactics.track("signup", {
@@ -16,4 +16,4 @@ await stactics.track("signup", {
 });
 ```
 
-Use `st_live_...` in browsers and `st_secret_...` in trusted server-side JavaScript.
+Use `pk_...` in browsers and `sk_...` in trusted server-side JavaScript.

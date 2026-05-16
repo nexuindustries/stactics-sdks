@@ -14,4 +14,4 @@ client.track(
 )
 ```
 
-Use a `st_secret_...` key for server-side Ruby apps.
+Use a `sk_...` key for server-side Ruby apps.

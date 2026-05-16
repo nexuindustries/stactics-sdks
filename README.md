@@ -17,7 +17,7 @@ Packages:
 - `swift/`: Swift Package Manager library for Apple-platform apps and server-side Swift.
 - `kotlin/`: JVM/Android library with Kotlin APIs and Java interop under the `app.stactics:stactics-android` coordinates.
 
-Use `st_secret_...` keys on trusted servers and `st_live_...` keys in browser/mobile clients.
+Use `sk_...` keys on trusted servers and `pk_...` keys in browser/mobile clients.
 
 ## Publishing
 

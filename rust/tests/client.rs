@@ -8,7 +8,7 @@ async fn track_posts_single_event() {
     let server = MockServer::start().await;
     Mock::given(method("POST"))
         .and(path("/v1/events"))
-        .and(header("authorization", "Bearer st_live_test"))
+        .and(header("authorization", "Bearer pk_test"))
         .and(header("user-agent", "stactics-rust/0.1.0"))
         .and(body_json(json!({
             "event_type": "signup",
@@ -23,7 +23,7 @@ async fn track_posts_single_event() {
         .mount(&server)
         .await;
 
-    let client = Client::new("st_live_test").with_host(server.uri());
+    let client = Client::new("pk_test").with_host(server.uri());
     let result = client
         .track(
             Event::new("signup")
@@ -56,7 +56,7 @@ async fn batch_posts_events() {
         .mount(&server)
         .await;
 
-    let client = Client::new("st_secret_test").with_host(server.uri());
+    let client = Client::new("sk_test").with_host(server.uri());
     let result = client
         .batch(vec![
             Event::new("app_opened").device_id("install_abc"),
@@ -79,7 +79,7 @@ async fn returns_api_error_for_non_success_responses() {
         .mount(&server)
         .await;
 
-    let client = Client::new("st_live_test").with_host(server.uri());
+    let client = Client::new("pk_test").with_host(server.uri());
     let error = client.track(Event::new("made_up")).await.unwrap_err();
 
     match error {

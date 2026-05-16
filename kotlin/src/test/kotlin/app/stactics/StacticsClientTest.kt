@@ -11,7 +11,7 @@ class StacticsClientTest {
         val server = TestServer("""{"accepted":true,"accepted_count":1}""")
         server.start()
         try {
-            val client = StacticsClient(apiKey = "st_live_test", host = server.url)
+            val client = StacticsClient(apiKey = "pk_test", host = server.url)
 
             val result = client.trackBlocking(
                 eventType = "signup",
@@ -23,7 +23,7 @@ class StacticsClientTest {
             assertTrue(result.accepted)
             assertEquals(1, result.acceptedCount)
             assertEquals("/v1/events", server.path)
-            assertEquals("Bearer st_live_test", server.headers["Authorization"]?.first())
+            assertEquals("Bearer pk_test", server.headers["Authorization"]?.first())
             assertEquals("application/json", server.headers["Content-Type"]?.first())
             assertEquals("stactics-android/0.1.0", server.headers["User-agent"]?.first())
             assertTrue(server.body.contains(""""event_type":"signup""""))
@@ -38,7 +38,7 @@ class StacticsClientTest {
         val server = TestServer("""{"accepted":true,"accepted_count":2}""")
         server.start()
         try {
-            val client = StacticsClient(apiKey = "st_secret_test", host = server.url)
+            val client = StacticsClient(apiKey = "sk_test", host = server.url)
             val result = client.batchBlocking(
                 listOf(
                     StacticsEvent(eventType = "app_opened", deviceId = "install_abc"),

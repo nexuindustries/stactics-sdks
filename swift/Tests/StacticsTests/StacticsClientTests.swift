@@ -5,7 +5,7 @@ final class StacticsClientTests: XCTestCase {
     func testTrackPostsSingleEvent() async throws {
         let transport = RecordingTransport(statusCode: 201, body: #"{"accepted":true,"accepted_count":1}"#)
         let client = StacticsClient(
-            apiKey: "st_live_test",
+            apiKey: "pk_test",
             host: URL(string: "https://api.example.test")!,
             transport: transport
         )
@@ -20,7 +20,7 @@ final class StacticsClientTests: XCTestCase {
         XCTAssertTrue(result.accepted)
         XCTAssertEqual(result.acceptedCount, 1)
         XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.example.test/v1/events")
-        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer st_live_test")
+        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Content-Type"), "application/json")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.0")
 
@@ -34,7 +34,7 @@ final class StacticsClientTests: XCTestCase {
 
     func testBatchPostsEvents() async throws {
         let transport = RecordingTransport(statusCode: 201, body: #"{"accepted":true,"accepted_count":2}"#)
-        let client = StacticsClient(apiKey: "st_secret_test", transport: transport)
+        let client = StacticsClient(apiKey: "sk_test", transport: transport)
 
         let result = try await client.batch([
             StacticsEvent(eventType: "app_opened", deviceId: "install_abc"),
@@ -54,7 +54,7 @@ final class StacticsClientTests: XCTestCase {
 
     func testThrowsApiErrorForNonSuccessResponses() async {
         let transport = RecordingTransport(statusCode: 422, body: #"{"error":"event type is not allowed"}"#)
-        let client = StacticsClient(apiKey: "st_live_test", transport: transport)
+        let client = StacticsClient(apiKey: "pk_test", transport: transport)
 
         do {
             _ = try await client.track("made_up")

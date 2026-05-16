@@ -8,7 +8,7 @@ async function testTracksSingleEvent() {
     return response(201, { accepted: true, accepted_count: 1 });
   };
   const client = new StacticsClient({
-    apiKey: "st_live_test",
+    apiKey: "pk_test",
     host: "https://api.example.test",
     fetch: fetchImpl,
   });
@@ -22,7 +22,7 @@ async function testTracksSingleEvent() {
   assert.equal(result.accepted, true);
   assert.equal(result.acceptedCount, 1);
   assert.equal(calls[0].url, "https://api.example.test/v1/events");
-  assert.equal(calls[0].options.headers.Authorization, "Bearer st_live_test");
+  assert.equal(calls[0].options.headers.Authorization, "Bearer pk_test");
   assert.deepEqual(JSON.parse(calls[0].options.body), {
     event_type: "signup",
     user_id: "user_123",
@@ -37,7 +37,7 @@ async function testSendsBatch() {
     calls.push({ url, options });
     return response(201, { accepted: true, accepted_count: 2 });
   };
-  const client = new StacticsClient({ apiKey: "st_secret_test", fetch: fetchImpl });
+  const client = new StacticsClient({ apiKey: "sk_test", fetch: fetchImpl });
 
   const result = await client.batch([
     { eventType: "app_opened", deviceId: "install_abc" },
@@ -56,7 +56,7 @@ async function testSendsBatch() {
 
 async function testRaisesApiErrors() {
   const client = new StacticsClient({
-    apiKey: "st_live_test",
+    apiKey: "pk_test",
     fetch: async () => response(422, { error: "event type is not allowed" }),
   });
 

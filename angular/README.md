@@ -9,7 +9,7 @@ import { provideStactics } from '@stactics/angular';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideStactics({
-      apiKey: 'st_live_...',
+      apiKey: 'pk_...',
       environment: 'production',
     }),
   ],
@@ -29,4 +29,4 @@ signup() {
 }
 ```
 
-Use a `st_live_...` key in Angular/browser apps.
+Use a `pk_...` key in Angular/browser apps.

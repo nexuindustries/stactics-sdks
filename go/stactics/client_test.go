@@ -14,7 +14,7 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		if r.URL.Path != "/v1/events" {
 			t.Fatalf("path = %s", r.URL.Path)
 		}
-		if got := r.Header.Get("Authorization"); got != "Bearer st_live_test" {
+		if got := r.Header.Get("Authorization"); got != "Bearer pk_test" {
 			t.Fatalf("authorization = %s", got)
 		}
 		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.0" {
@@ -28,7 +28,7 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient("st_live_test", WithHost(server.URL))
+	client := NewClient("pk_test", WithHost(server.URL))
 	result, err := client.Track(context.Background(), "signup", Event{
 		UserID:      "user_123",
 		Environment: "production",
@@ -60,7 +60,7 @@ func TestBatchPostsEvents(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient("st_secret_test", WithHost(server.URL))
+	client := NewClient("sk_test", WithHost(server.URL))
 	result, err := client.Batch(context.Background(), []Event{
 		{EventType: "app_opened", DeviceID: "install_abc"},
 		{EventType: "screen_viewed", Metadata: map[string]any{"screen": "Home"}},
@@ -84,7 +84,7 @@ func TestReturnsAPIErrorForNonSuccessResponses(t *testing.T) {
 	}))
 	defer server.Close()
 
-	client := NewClient("st_live_test", WithHost(server.URL))
+	client := NewClient("pk_test", WithHost(server.URL))
 	_, err := client.Track(context.Background(), "made_up", Event{})
 	apiErr, ok := err.(*APIError)
 	if !ok {
