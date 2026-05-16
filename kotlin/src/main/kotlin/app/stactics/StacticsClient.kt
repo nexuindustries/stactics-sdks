@@ -116,8 +116,8 @@ data class StacticsEvent(
 data class StacticsResult(val accepted: Boolean, val acceptedCount: Int) {
     companion object {
         fun fromJson(body: String): StacticsResult {
-            val accepted = body.contains(""""accepted":true"""")
-            val count = Regex(""""accepted_count"\s*:\s*(\d+)"""").find(body)?.groupValues?.get(1)?.toInt() ?: 0
+            val accepted = Regex("\"accepted\"\\s*:\\s*true").containsMatchIn(body)
+            val count = Regex("\"accepted_count\"\\s*:\\s*(\\d+)").find(body)?.groupValues?.get(1)?.toInt() ?: 0
             return StacticsResult(accepted = accepted, acceptedCount = count)
         }
     }
