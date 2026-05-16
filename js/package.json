@@ -1,0 +1,34 @@
+{
+  "name": "@stactics/js",
+  "version": "0.1.0",
+  "description": "JavaScript SDK for the Stactics ingest API",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "test": "node test/client.test.mjs"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexuindustries/stactics-sdks.git",
+    "directory": "js"
+  },
+  "homepage": "https://github.com/nexuindustries/stactics-sdks/tree/main/js#readme",
+  "bugs": {
+    "url": "https://github.com/nexuindustries/stactics-sdks/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

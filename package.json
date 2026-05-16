@@ -1,0 +1,20 @@
+{
+  "name": "stactics-sdks",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Official SDKs for the Stactics ingest API",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexuindustries/stactics-sdks.git"
+  },
+  "workspaces": [
+    "js",
+    "angular"
+  ],
+  "scripts": {
+    "test:js": "npm test --workspace @stactics/js",
+    "build:angular": "npm run build --workspace @stactics/angular"
+  },
+  "license": "MIT"
+}
+

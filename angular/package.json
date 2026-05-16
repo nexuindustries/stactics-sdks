@@ -1,0 +1,36 @@
+{
+  "name": "@stactics/angular",
+  "version": "0.1.0",
+  "description": "Angular wrapper for the Stactics ingest SDK",
+  "sideEffects": false,
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=16.0.0",
+    "@stactics/js": "^0.1.0"
+  },
+  "dependencies": {
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^20.3.21",
+    "@angular/compiler-cli": "^20.3.21",
+    "@angular/core": "^20.3.21",
+    "ng-packagr": "20.3.2",
+    "typescript": "~5.8.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexuindustries/stactics-sdks.git",
+    "directory": "angular"
+  },
+  "homepage": "https://github.com/nexuindustries/stactics-sdks/tree/main/angular#readme",
+  "bugs": {
+    "url": "https://github.com/nexuindustries/stactics-sdks/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
