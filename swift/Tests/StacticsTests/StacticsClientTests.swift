@@ -42,7 +42,7 @@ final class StacticsClientTests: XCTestCase {
         ])
 
         XCTAssertEqual(result.acceptedCount, 2)
-        XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.stactics.app/v1/events/batch")
+        XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.stactics.io/v1/events/batch")
 
         let body = try XCTUnwrap(transport.bodies.first)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]

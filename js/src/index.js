@@ -1,4 +1,4 @@
-const DEFAULT_HOST = "https://api.stactics.app";
+const DEFAULT_HOST = "https://api.stactics.io";
 
 export class StacticsApiError extends Error {
   constructor(status, body) {

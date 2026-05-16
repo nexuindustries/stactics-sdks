@@ -2,7 +2,7 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, USER_
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-const DEFAULT_HOST: &str = "https://api.stactics.app";
+const DEFAULT_HOST: &str = "https://api.stactics.io";
 const USER_AGENT_VALUE: &str = "stactics-rust/0.1.0";
 
 pub type Result<T> = std::result::Result<T, Error>;

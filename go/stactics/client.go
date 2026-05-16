@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const defaultHost = "https://api.stactics.app"
+const defaultHost = "https://api.stactics.io"
 const userAgent = "stactics-go/0.1.0"
 
 type Client struct {

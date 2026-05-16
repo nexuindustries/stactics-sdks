@@ -89,7 +89,7 @@ public struct StacticsEvent: Encodable, Equatable {
 }
 
 public final class StacticsClient {
-    public static let defaultHost = URL(string: "https://api.stactics.app")!
+    public static let defaultHost = URL(string: "https://api.stactics.io")!
 
     private let apiKey: String
     private let host: URL

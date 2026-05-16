@@ -66,7 +66,7 @@ class StacticsClient @JvmOverloads constructor(
     }
 
     companion object {
-        const val DEFAULT_HOST = "https://api.stactics.app"
+        const val DEFAULT_HOST = "https://api.stactics.io"
         private val DEFAULT_EXECUTOR = Executors.newCachedThreadPool()
     }
 }

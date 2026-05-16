@@ -45,7 +45,7 @@ async function testSendsBatch() {
   ]);
 
   assert.equal(result.acceptedCount, 2);
-  assert.equal(calls[0].url, "https://api.stactics.app/v1/events/batch");
+  assert.equal(calls[0].url, "https://api.stactics.io/v1/events/batch");
   assert.deepEqual(JSON.parse(calls[0].options.body), {
     events: [
       { event_type: "app_opened", device_id: "install_abc" },
