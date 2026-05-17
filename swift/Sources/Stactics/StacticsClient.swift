@@ -43,6 +43,7 @@ public struct StacticsEvent: Encodable, Equatable {
     public var userId: String?
     public var accountId: String?
     public var email: String?
+    public var displayName: String?
     public var deviceId: String?
     public var buildVersion: String?
     public var platform: String?
@@ -57,6 +58,7 @@ public struct StacticsEvent: Encodable, Equatable {
         userId: String? = nil,
         accountId: String? = nil,
         email: String? = nil,
+        displayName: String? = nil,
         deviceId: String? = nil,
         buildVersion: String? = nil,
         platform: String? = nil,
@@ -70,6 +72,7 @@ public struct StacticsEvent: Encodable, Equatable {
         self.userId = userId
         self.accountId = accountId
         self.email = email
+        self.displayName = displayName
         self.deviceId = deviceId
         self.buildVersion = buildVersion
         self.platform = platform
@@ -85,6 +88,7 @@ public struct StacticsEvent: Encodable, Equatable {
         case userId = "user_id"
         case accountId = "account_id"
         case email
+        case displayName = "display_name"
         case deviceId = "device_id"
         case buildVersion = "build_version"
         case platform
@@ -126,6 +130,7 @@ public final class StacticsClient {
         userId: String? = nil,
         accountId: String? = nil,
         email: String? = nil,
+        displayName: String? = nil,
         deviceId: String? = nil,
         buildVersion: String? = nil,
         platform: String? = "ios",
@@ -140,6 +145,7 @@ public final class StacticsClient {
             userId: userId,
             accountId: accountId,
             email: email,
+            displayName: displayName,
             deviceId: deviceId,
             buildVersion: buildVersion,
             platform: platform,

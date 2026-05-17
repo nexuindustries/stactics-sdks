@@ -13,6 +13,8 @@ final class StacticsClientTests: XCTestCase {
         let result = try await client.track(
             "signup",
             userId: "user_123",
+            email: "founder@example.com",
+            displayName: "Ada Founder",
             environment: "production",
             amountCents: 1299,
             currency: "AUD",
@@ -30,6 +32,8 @@ final class StacticsClientTests: XCTestCase {
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         XCTAssertEqual(json?["event_type"] as? String, "signup")
         XCTAssertEqual(json?["user_id"] as? String, "user_123")
+        XCTAssertEqual(json?["email"] as? String, "founder@example.com")
+        XCTAssertEqual(json?["display_name"] as? String, "Ada Founder")
         XCTAssertEqual(json?["environment"] as? String, "production")
         XCTAssertEqual(json?["amount_cents"] as? Int, 1299)
         XCTAssertEqual(json?["currency"] as? String, "AUD")
