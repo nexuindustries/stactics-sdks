@@ -23,17 +23,30 @@ class StacticsClient @JvmOverloads constructor(
         eventType: String,
         userId: String? = null,
         environment: String? = null,
+        amountCents: Long? = null,
+        currency: String? = null,
         metadata: Map<String, Any?>? = null
     ): CompletableFuture<StacticsResult> {
-        return track(StacticsEvent(eventType = eventType, userId = userId, environment = environment, metadata = metadata))
+        return track(
+            StacticsEvent(
+                eventType = eventType,
+                userId = userId,
+                environment = environment,
+                amountCents = amountCents,
+                currency = currency,
+                metadata = metadata
+            )
+        )
     }
 
     fun trackBlocking(
         eventType: String,
         userId: String? = null,
         environment: String? = null,
+        amountCents: Long? = null,
+        currency: String? = null,
         metadata: Map<String, Any?>? = null
-    ): StacticsResult = track(eventType, userId, environment, metadata).get()
+    ): StacticsResult = track(eventType, userId, environment, amountCents, currency, metadata).get()
 
     fun batch(events: List<StacticsEvent>): CompletableFuture<StacticsResult> {
         return send("/v1/events/batch", mapOf("events" to events.map { it.toMap() }))
@@ -47,7 +60,7 @@ class StacticsClient @JvmOverloads constructor(
             connection.requestMethod = "POST"
             connection.setRequestProperty("Authorization", "Bearer $apiKey")
             connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("User-Agent", "stactics-android/0.1.0")
+            connection.setRequestProperty("User-Agent", "stactics-android/0.1.1")
             connection.doOutput = true
             connection.outputStream.use { it.write(Json.encode(payload).toByteArray()) }
 
@@ -80,6 +93,8 @@ data class StacticsEvent(
     val buildVersion: String? = null,
     val platform: String? = "android",
     val environment: String? = null,
+    val amountCents: Long? = null,
+    val currency: String? = null,
     val metadata: Map<String, Any?>? = null,
     val occurredAt: String? = null
 ) {
@@ -92,6 +107,8 @@ data class StacticsEvent(
         "build_version" to buildVersion,
         "platform" to platform,
         "environment" to environment,
+        "amount_cents" to amountCents,
+        "currency" to currency,
         "metadata" to metadata,
         "occurred_at" to occurredAt
     ).filterValues { it != null }
@@ -104,12 +121,23 @@ data class StacticsEvent(
     class Builder(private val eventType: String) {
         private var userId: String? = null
         private var environment: String? = null
+        private var amountCents: Long? = null
+        private var currency: String? = null
         private var metadata: Map<String, Any?>? = null
 
         fun userId(value: String?) = apply { userId = value }
         fun environment(value: String?) = apply { environment = value }
+        fun amountCents(value: Long?) = apply { amountCents = value }
+        fun currency(value: String?) = apply { currency = value }
         fun metadata(value: Map<String, Any?>?) = apply { metadata = value }
-        fun build(): StacticsEvent = StacticsEvent(eventType = eventType, userId = userId, environment = environment, metadata = metadata)
+        fun build(): StacticsEvent = StacticsEvent(
+            eventType = eventType,
+            userId = userId,
+            environment = environment,
+            amountCents = amountCents,
+            currency = currency,
+            metadata = metadata
+        )
     }
 }
 

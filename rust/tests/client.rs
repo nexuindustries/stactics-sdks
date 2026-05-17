@@ -9,11 +9,13 @@ async fn track_posts_single_event() {
     Mock::given(method("POST"))
         .and(path("/v1/events"))
         .and(header("authorization", "Bearer pk_test"))
-        .and(header("user-agent", "stactics-rust/0.1.0"))
+        .and(header("user-agent", "stactics-rust/0.1.1"))
         .and(body_json(json!({
             "event_type": "signup",
             "user_id": "user_123",
             "environment": "production",
+            "amount_cents": 1299,
+            "currency": "AUD",
             "metadata": { "plan": "free" }
         })))
         .respond_with(ResponseTemplate::new(201).set_body_json(json!({
@@ -29,6 +31,8 @@ async fn track_posts_single_event() {
             Event::new("signup")
                 .user_id("user_123")
                 .environment("production")
+                .amount_cents(1299)
+                .currency("AUD")
                 .metadata(json!({ "plan": "free" })),
         )
         .await

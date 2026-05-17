@@ -16,6 +16,8 @@ async function testTracksSingleEvent() {
   const result = await client.track("signup", {
     userId: "user_123",
     environment: "production",
+    amountCents: 1299,
+    currency: "AUD",
     metadata: { plan: "free" },
   });
 
@@ -27,6 +29,8 @@ async function testTracksSingleEvent() {
     event_type: "signup",
     user_id: "user_123",
     environment: "production",
+    amount_cents: 1299,
+    currency: "AUD",
     metadata: { plan: "free" },
   });
 }

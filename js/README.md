@@ -14,6 +14,13 @@ await stactics.track("signup", {
   environment: "production",
   metadata: { plan: "free" },
 });
+
+await stactics.track("purchase", {
+  userId: "user_123",
+  amountCents: 1299,
+  currency: "AUD",
+  metadata: { transactionId: "txn_123" },
+});
 ```
 
 Use `pk_...` in browsers and `sk_...` in trusted server-side JavaScript.

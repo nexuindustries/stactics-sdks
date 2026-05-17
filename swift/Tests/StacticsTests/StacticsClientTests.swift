@@ -14,6 +14,8 @@ final class StacticsClientTests: XCTestCase {
             "signup",
             userId: "user_123",
             environment: "production",
+            amountCents: 1299,
+            currency: "AUD",
             metadata: ["plan": "free"]
         )
 
@@ -22,13 +24,15 @@ final class StacticsClientTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.example.test/v1/events")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.0")
+        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.1")
 
         let body = try XCTUnwrap(transport.bodies.first)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
         XCTAssertEqual(json?["event_type"] as? String, "signup")
         XCTAssertEqual(json?["user_id"] as? String, "user_123")
         XCTAssertEqual(json?["environment"] as? String, "production")
+        XCTAssertEqual(json?["amount_cents"] as? Int, 1299)
+        XCTAssertEqual(json?["currency"] as? String, "AUD")
         XCTAssertEqual((json?["metadata"] as? [String: Any])?["plan"] as? String, "free")
     }
 

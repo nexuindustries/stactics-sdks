@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "stactics"
-  spec.version = "0.1.0"
+  spec.version = "0.1.1"
   spec.authors = [ "Nexu Industries" ]
   spec.email = [ "support@stactics.app" ]
 

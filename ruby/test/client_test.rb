@@ -9,7 +9,14 @@ class StacticsClientTest < Minitest::Test
     transport = FakeTransport.new(FakeResponse.new("201", { accepted: true, accepted_count: 1 }.to_json))
     client = Stactics::Client.new(api_key: "sk_test", host: "https://api.example.test", transport: transport)
 
-    result = client.track("signup", user_id: "user_123", environment: "production", metadata: { plan: "free" })
+    result = client.track(
+      "signup",
+      user_id: "user_123",
+      environment: "production",
+      amount_cents: 1299,
+      currency: "AUD",
+      metadata: { plan: "free" }
+    )
 
     assert result.accepted?
     assert_equal 1, result.accepted_count
@@ -20,6 +27,8 @@ class StacticsClientTest < Minitest::Test
         "event_type" => "signup",
         "user_id" => "user_123",
         "environment" => "production",
+        "amount_cents" => 1299,
+        "currency" => "AUD",
         "metadata" => { "plan" => "free" }
       },
       transport.requests.first.fetch(:payload)

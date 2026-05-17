@@ -12,7 +12,7 @@ import (
 )
 
 const defaultHost = "https://api.stactics.io"
-const userAgent = "stactics-go/0.1.0"
+const userAgent = "stactics-go/0.1.1"
 
 type Client struct {
 	apiKey     string
@@ -56,6 +56,8 @@ type Event struct {
 	BuildVersion string         `json:"build_version,omitempty"`
 	Platform     string         `json:"platform,omitempty"`
 	Environment  string         `json:"environment,omitempty"`
+	AmountCents  int64          `json:"amount_cents,omitempty"`
+	Currency     string         `json:"currency,omitempty"`
 	Metadata     map[string]any `json:"metadata,omitempty"`
 	OccurredAt   *time.Time     `json:"occurred_at,omitempty"`
 }

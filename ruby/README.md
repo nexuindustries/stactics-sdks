@@ -12,6 +12,14 @@ client.track(
   environment: "production",
   metadata: { plan: "free" }
 )
+
+client.track(
+  "purchase",
+  user_id: "user_123",
+  amount_cents: 1299,
+  currency: "AUD",
+  metadata: { transaction_id: "txn_123" }
+)
 ```
 
 Use a `sk_...` key for server-side Ruby apps.

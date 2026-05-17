@@ -17,7 +17,7 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		if got := r.Header.Get("Authorization"); got != "Bearer pk_test" {
 			t.Fatalf("authorization = %s", got)
 		}
-		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.0" {
+		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.1" {
 			t.Fatalf("user agent = %s", got)
 		}
 		if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
@@ -32,6 +32,8 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 	result, err := client.Track(context.Background(), "signup", Event{
 		UserID:      "user_123",
 		Environment: "production",
+		AmountCents: 1299,
+		Currency:    "AUD",
 		Metadata:    map[string]any{"plan": "free"},
 	})
 
@@ -42,6 +44,9 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		t.Fatalf("result = %#v", result)
 	}
 	if requestBody["event_type"] != "signup" || requestBody["user_id"] != "user_123" {
+		t.Fatalf("request body = %#v", requestBody)
+	}
+	if requestBody["amount_cents"] != float64(1299) || requestBody["currency"] != "AUD" {
 		t.Fatalf("request body = %#v", requestBody)
 	}
 }

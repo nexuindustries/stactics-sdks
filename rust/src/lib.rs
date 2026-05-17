@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 const DEFAULT_HOST: &str = "https://api.stactics.io";
-const USER_AGENT_VALUE: &str = "stactics-rust/0.1.0";
+const USER_AGENT_VALUE: &str = "stactics-rust/0.1.1";
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -102,6 +102,10 @@ pub struct Event {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub environment: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub amount_cents: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub currency: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub occurred_at: Option<String>,
@@ -147,6 +151,16 @@ impl Event {
 
     pub fn environment(mut self, value: impl Into<String>) -> Self {
         self.environment = Some(value.into());
+        self
+    }
+
+    pub fn amount_cents(mut self, value: i64) -> Self {
+        self.amount_cents = Some(value);
+        self
+    }
+
+    pub fn currency(mut self, value: impl Into<String>) -> Self {
+        self.currency = Some(value.into());
         self
     }
 

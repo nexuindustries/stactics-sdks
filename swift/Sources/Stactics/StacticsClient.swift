@@ -47,6 +47,8 @@ public struct StacticsEvent: Encodable, Equatable {
     public var buildVersion: String?
     public var platform: String?
     public var environment: String?
+    public var amountCents: Int?
+    public var currency: String?
     public var metadata: [String: String]?
     public var occurredAt: Date?
 
@@ -59,6 +61,8 @@ public struct StacticsEvent: Encodable, Equatable {
         buildVersion: String? = nil,
         platform: String? = nil,
         environment: String? = nil,
+        amountCents: Int? = nil,
+        currency: String? = nil,
         metadata: [String: String]? = nil,
         occurredAt: Date? = nil
     ) {
@@ -70,6 +74,8 @@ public struct StacticsEvent: Encodable, Equatable {
         self.buildVersion = buildVersion
         self.platform = platform
         self.environment = environment
+        self.amountCents = amountCents
+        self.currency = currency
         self.metadata = metadata
         self.occurredAt = occurredAt
     }
@@ -83,6 +89,8 @@ public struct StacticsEvent: Encodable, Equatable {
         case buildVersion = "build_version"
         case platform
         case environment
+        case amountCents = "amount_cents"
+        case currency
         case metadata
         case occurredAt = "occurred_at"
     }
@@ -122,6 +130,8 @@ public final class StacticsClient {
         buildVersion: String? = nil,
         platform: String? = "ios",
         environment: String? = nil,
+        amountCents: Int? = nil,
+        currency: String? = nil,
         metadata: [String: String]? = nil,
         occurredAt: Date? = nil
     ) async throws -> StacticsResult {
@@ -134,6 +144,8 @@ public final class StacticsClient {
             buildVersion: buildVersion,
             platform: platform,
             environment: environment,
+            amountCents: amountCents,
+            currency: currency,
             metadata: metadata,
             occurredAt: occurredAt
         )
@@ -150,7 +162,7 @@ public final class StacticsClient {
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("stactics-swift/0.1.0", forHTTPHeaderField: "User-Agent")
+        request.setValue("stactics-swift/0.1.1", forHTTPHeaderField: "User-Agent")
         request.httpBody = try encoder.encode(payload)
 
         let (data, response) = try await transport.send(request)

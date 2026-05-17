@@ -17,6 +17,8 @@ class StacticsClientTest {
                 eventType = "signup",
                 userId = "user_123",
                 environment = "production",
+                amountCents = 1299,
+                currency = "AUD",
                 metadata = mapOf("plan" to "free")
             )
 
@@ -25,9 +27,11 @@ class StacticsClientTest {
             assertEquals("/v1/events", server.path)
             assertEquals("Bearer pk_test", server.headers["Authorization"]?.first())
             assertEquals("application/json", server.headers["Content-Type"]?.first())
-            assertEquals("stactics-android/0.1.0", server.headers["User-agent"]?.first())
+            assertEquals("stactics-android/0.1.1", server.headers["User-agent"]?.first())
             assertTrue(server.body.contains(""""event_type":"signup""""))
             assertTrue(server.body.contains(""""user_id":"user_123""""))
+            assertTrue(server.body.contains(""""amount_cents":1299"""))
+            assertTrue(server.body.contains(""""currency":"AUD""""))
         } finally {
             server.stop()
         }

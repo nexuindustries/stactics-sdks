@@ -14,6 +14,13 @@ _, err := client.Track(context.Background(), "signup", stactics.Event{
     Environment: "production",
     Metadata: map[string]any{"plan": "free"},
 })
+
+_, err = client.Track(context.Background(), "purchase", stactics.Event{
+    UserID: "user_123",
+    AmountCents: 1299,
+    Currency: "AUD",
+    Metadata: map[string]any{"transaction_id": "txn_123"},
+})
 ```
 
 Run tests from this folder:

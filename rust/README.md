@@ -14,6 +14,13 @@ client.track(Event::new("signup")
     .environment("production")
     .metadata(json!({ "plan": "free" })))
     .await?;
+
+client.track(Event::new("purchase")
+    .user_id("user_123")
+    .amount_cents(1299)
+    .currency("AUD")
+    .metadata(json!({ "transaction_id": "txn_123" })))
+    .await?;
 ```
 
 Run tests from this folder:

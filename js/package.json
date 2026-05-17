@@ -1,6 +1,6 @@
 {
   "name": "@stactics/js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JavaScript SDK for the Stactics ingest API",
   "type": "module",
   "main": "src/index.js",

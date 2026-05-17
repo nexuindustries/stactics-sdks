@@ -10,6 +10,25 @@ export interface StacticsResult {
   body: Record<string, unknown>;
 }
 
+export interface StacticsEventAttributes {
+  userId?: string;
+  accountId?: string;
+  email?: string;
+  deviceId?: string;
+  buildVersion?: string;
+  platform?: string;
+  environment?: string;
+  amountCents?: number;
+  currency?: string;
+  metadata?: Record<string, unknown>;
+  occurredAt?: string;
+  [key: string]: unknown;
+}
+
+export interface StacticsBatchEvent extends StacticsEventAttributes {
+  eventType: string;
+}
+
 export class StacticsApiError extends Error {
   status: number;
   body: Record<string, unknown>;
@@ -17,6 +36,6 @@ export class StacticsApiError extends Error {
 
 export class StacticsClient {
   constructor(options: StacticsClientOptions);
-  track(eventType: string, attributes?: Record<string, unknown>): Promise<StacticsResult>;
-  batch(events: Array<Record<string, unknown>>): Promise<StacticsResult>;
+  track(eventType: string, attributes?: StacticsEventAttributes): Promise<StacticsResult>;
+  batch(events: StacticsBatchEvent[]): Promise<StacticsResult>;
 }

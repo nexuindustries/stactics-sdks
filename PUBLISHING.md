@@ -8,8 +8,8 @@ This repository is designed to be public. Go and Swift distribution happens dire
 2. Tag the repo:
 
    ```sh
-   git tag v0.1.0
-   git push origin v0.1.0
+   git tag v0.1.1
+   git push origin v0.1.1
    ```
 
 3. Publish registry-backed packages.
@@ -19,7 +19,7 @@ This repository is designed to be public. Go and Swift distribution happens dire
 ```sh
 cd ruby
 gem build stactics.gemspec
-gem push stactics-0.1.0.gem
+gem push stactics-0.1.1.gem
 ```
 
 Requires a RubyGems account with permission to own `stactics`.
@@ -49,7 +49,7 @@ Requires npm login and access to publish under the `@stactics` scope.
 After pushing the public repo and tag, Go users can install:
 
 ```sh
-go get github.com/nexuindustries/stactics-sdks/go/stactics@v0.1.0
+go get github.com/nexuindustries/stactics-sdks/go/stactics@v0.1.1
 ```
 
 ## Swift
@@ -57,7 +57,7 @@ go get github.com/nexuindustries/stactics-sdks/go/stactics@v0.1.0
 After pushing the public repo and tag, Swift users can add:
 
 ```swift
-.package(url: "https://github.com/nexuindustries/stactics-sdks", from: "0.1.0")
+.package(url: "https://github.com/nexuindustries/stactics-sdks", from: "0.1.1")
 ```
 
 ## Rust
@@ -74,8 +74,7 @@ Requires a crates.io API token and package ownership for `stactics`.
 The Kotlin package is ready for Maven Central coordinates:
 
 ```text
-app.stactics:stactics-android:0.1.0
+app.stactics:stactics-android:0.1.1
 ```
 
 Maven Central publishing still needs signing and Sonatype Central Portal configuration before first release.
-

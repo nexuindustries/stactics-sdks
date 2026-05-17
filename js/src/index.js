@@ -43,7 +43,7 @@ export class StacticsClient {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
-        "User-Agent": "stactics-js/0.1.0",
+        "User-Agent": "stactics-js/0.1.1",
       },
       body: JSON.stringify(payload),
     });
