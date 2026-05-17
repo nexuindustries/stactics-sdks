@@ -25,7 +25,7 @@ try await client.track(
 )
 ```
 
-Run tests from this folder:
+Run tests from the repository root:
 
 ```sh
 swift test
