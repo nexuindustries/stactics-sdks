@@ -1,5 +1,5 @@
 {
-  "name": "@stactics/js",
+  "name": "@stactics.io/js",
   "version": "0.1.1",
   "description": "JavaScript SDK for the Stactics ingest API",
   "type": "module",

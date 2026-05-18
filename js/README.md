@@ -3,7 +3,7 @@
 Universal JavaScript client for the Stactics ingest API.
 
 ```js
-import { StacticsClient } from "@stactics/js";
+import { StacticsClient } from "@stactics.io/js";
 
 const stactics = new StacticsClient({
   apiKey: "pk_...",

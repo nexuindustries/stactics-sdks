@@ -31,7 +31,7 @@ cd js
 npm publish --access public
 ```
 
-Requires npm login and access to publish under the `@stactics` scope.
+Requires npm login and access to publish under the `@stactics.io` scope.
 
 ## Angular
 
@@ -42,7 +42,7 @@ cd dist/angular
 npm publish --access public
 ```
 
-Requires npm login and access to publish under the `@stactics` scope.
+Requires npm login and access to publish under the `@stactics.io` scope.
 
 ## Go
 

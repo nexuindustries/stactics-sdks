@@ -1,10 +1,10 @@
 # Stactics Angular SDK
 
-Angular wrapper around `@stactics/js`.
+Angular wrapper around `@stactics.io/js`.
 
 ```ts
 import { ApplicationConfig } from '@angular/core';
-import { provideStactics } from '@stactics/angular';
+import { provideStactics } from '@stactics.io/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ```ts
-import { StacticsService } from '@stactics/angular';
+import { StacticsService } from '@stactics.io/angular';
 
 constructor(private readonly stactics: StacticsService) {}
 

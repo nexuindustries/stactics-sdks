@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { StacticsClient, StacticsResult } from '@stactics/js';
+import { StacticsBatchEvent, StacticsClient, StacticsEventAttributes, StacticsResult } from '@stactics.io/js';
 import { STACTICS_CONFIG, StacticsAngularConfig } from './stactics.config';
 
 @Injectable()
@@ -13,19 +13,19 @@ export class StacticsService {
     });
   }
 
-  track(eventType: string, attributes: Record<string, unknown> = {}): Promise<StacticsResult> {
+  track(eventType: string, attributes: StacticsEventAttributes = {}): Promise<StacticsResult> {
     return this.client.track(eventType, this.withDefaults(attributes));
   }
 
-  batch(events: Array<Record<string, unknown>>): Promise<StacticsResult> {
+  batch(events: StacticsBatchEvent[]): Promise<StacticsResult> {
     return this.client.batch(events.map((event) => this.withDefaults(event)));
   }
 
-  private withDefaults(attributes: Record<string, unknown>): Record<string, unknown> {
+  private withDefaults<T extends StacticsEventAttributes>(attributes: T): T {
     return {
       platform: this.config.platform || 'web',
       environment: this.config.environment,
       ...attributes,
-    };
+    } as T;
   }
 }
