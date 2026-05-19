@@ -1,6 +1,6 @@
 {
   "name": "@stactics.io/angular",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Angular wrapper for the Stactics ingest SDK",
   "sideEffects": false,
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "peerDependencies": {
     "@angular/core": ">=16.0.0",
-    "@stactics.io/js": "^0.1.1"
+    "@stactics.io/js": "^0.1.2"
   },
   "dependencies": {
     "tslib": "^2.6.0"

@@ -1,5 +1,10 @@
 import assert from "assert";
-import { StacticsClient, StacticsApiError } from "../src/index.js";
+import {
+  StacticsApiError,
+  StacticsClient,
+  StacticsEvents,
+  StacticsEventTypes,
+} from "../src/index.js";
 
 async function testTracksSingleEvent() {
   const calls = [];
@@ -58,6 +63,70 @@ async function testSendsBatch() {
   });
 }
 
+async function testTracksBuiltEventPayload() {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url, options });
+    return response(201, { accepted: true, accepted_count: 1 });
+  };
+  const client = new StacticsClient({
+    apiKey: "pk_test",
+    host: "https://api.example.test",
+    fetch: fetchImpl,
+  });
+
+  const event = StacticsEvents.purchase({
+    userId: "user_123",
+    accountId: "team_123",
+    amountCents: 1299,
+    currency: "aud",
+    metadata: { transactionId: "txn_123", productId: "pro_monthly" },
+  });
+
+  assert.equal(event.eventType, StacticsEventTypes.purchase);
+
+  const result = await client.trackEvent(event);
+
+  assert.equal(result.accepted, true);
+  assert.deepEqual(JSON.parse(calls[0].options.body), {
+    event_type: "purchase",
+    user_id: "user_123",
+    account_id: "team_123",
+    amount_cents: 1299,
+    currency: "aud",
+    metadata: { transaction_id: "txn_123", product_id: "pro_monthly" },
+  });
+}
+
+function testBuildsDefaultEventPayloads() {
+  assert.deepEqual(StacticsEvents.login({
+    userId: "user_123",
+    email: "founder@example.com",
+    displayName: "Sam Founder",
+  }), {
+    eventType: "login",
+    userId: "user_123",
+    email: "founder@example.com",
+    displayName: "Sam Founder",
+  });
+
+  assert.deepEqual(StacticsEvents.screenViewed({
+    userId: "user_123",
+    metadata: { path: "/dashboard" },
+  }), {
+    eventType: "screen_viewed",
+    userId: "user_123",
+    metadata: { path: "/dashboard" },
+  });
+
+  assert.deepEqual(StacticsEvents.healthCheck({
+    metadata: { source: "uptime_monitor", check: "ingest" },
+  }), {
+    eventType: "health_check",
+    metadata: { source: "uptime_monitor", check: "ingest" },
+  });
+}
+
 async function testRaisesApiErrors() {
   const client = new StacticsClient({
     apiKey: "pk_test",
@@ -87,4 +156,6 @@ function response(status, body) {
 
 await testTracksSingleEvent();
 await testSendsBatch();
+await testTracksBuiltEventPayload();
+testBuildsDefaultEventPayloads();
 await testRaisesApiErrors();

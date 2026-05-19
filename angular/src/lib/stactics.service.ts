@@ -17,6 +17,10 @@ export class StacticsService {
     return this.client.track(eventType, this.withDefaults(attributes));
   }
 
+  trackEvent(event: StacticsBatchEvent): Promise<StacticsResult> {
+    return this.client.trackEvent(this.withDefaults(event));
+  }
+
   batch(events: StacticsBatchEvent[]): Promise<StacticsResult> {
     return this.client.batch(events.map((event) => this.withDefaults(event)));
   }

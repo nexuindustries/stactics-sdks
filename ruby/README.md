@@ -9,17 +9,44 @@ client.track(
   "signup",
   user_id: "user_123",
   email: "founder@example.com",
+  display_name: "Sam Founder",
   environment: "production",
   metadata: { plan: "free" }
 )
 
 client.track(
+  "login",
+  user_id: "user_123",
+  email: "founder@example.com",
+  display_name: "Sam Founder",
+  device_id: "install_abc",
+  platform: "web"
+)
+
+client.track(
   "purchase",
   user_id: "user_123",
+  account_id: "team_123",
   amount_cents: 1299,
   currency: "AUD",
-  metadata: { transaction_id: "txn_123" }
+  metadata: { transaction_id: "txn_123", product_id: "pro_monthly" }
+)
+
+client.track(
+  "screen_viewed",
+  user_id: "user_123",
+  platform: "web",
+  metadata: { path: "/dashboard" }
+)
+
+client.track(
+  "error",
+  user_id: "user_123",
+  platform: "web",
+  metadata: { error: "Payment provider timeout", context: "checkout" }
 )
 ```
 
 Use a `sk_...` key for server-side Ruby apps.
+
+For revenue events, send both `amount_cents` and `currency`. Put transaction IDs, product IDs, screen names, feature names, error details, and notification details in `metadata`.

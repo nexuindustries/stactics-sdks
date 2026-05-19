@@ -1,5 +1,43 @@
 const DEFAULT_HOST = "https://api.stactics.io";
 
+export const StacticsEventTypes = Object.freeze({
+  signup: "signup",
+  login: "login",
+  active: "active",
+  purchase: "purchase",
+  subscriptionStarted: "subscription_started",
+  subscriptionCancelled: "subscription_cancelled",
+  trialStarted: "trial_started",
+  trialConverted: "trial_converted",
+  crash: "crash",
+  error: "error",
+  appOpened: "app_opened",
+  screenViewed: "screen_viewed",
+  featureUsed: "feature_used",
+  notificationSent: "notification_sent",
+  notificationOpened: "notification_opened",
+  healthCheck: "health_check",
+});
+
+export const StacticsEvents = Object.freeze({
+  signup: (attributes = {}) => buildEvent(StacticsEventTypes.signup, attributes),
+  login: (attributes = {}) => buildEvent(StacticsEventTypes.login, attributes),
+  active: (attributes = {}) => buildEvent(StacticsEventTypes.active, attributes),
+  purchase: (attributes = {}) => buildEvent(StacticsEventTypes.purchase, attributes),
+  subscriptionStarted: (attributes = {}) => buildEvent(StacticsEventTypes.subscriptionStarted, attributes),
+  subscriptionCancelled: (attributes = {}) => buildEvent(StacticsEventTypes.subscriptionCancelled, attributes),
+  trialStarted: (attributes = {}) => buildEvent(StacticsEventTypes.trialStarted, attributes),
+  trialConverted: (attributes = {}) => buildEvent(StacticsEventTypes.trialConverted, attributes),
+  crash: (attributes = {}) => buildEvent(StacticsEventTypes.crash, attributes),
+  error: (attributes = {}) => buildEvent(StacticsEventTypes.error, attributes),
+  appOpened: (attributes = {}) => buildEvent(StacticsEventTypes.appOpened, attributes),
+  screenViewed: (attributes = {}) => buildEvent(StacticsEventTypes.screenViewed, attributes),
+  featureUsed: (attributes = {}) => buildEvent(StacticsEventTypes.featureUsed, attributes),
+  notificationSent: (attributes = {}) => buildEvent(StacticsEventTypes.notificationSent, attributes),
+  notificationOpened: (attributes = {}) => buildEvent(StacticsEventTypes.notificationOpened, attributes),
+  healthCheck: (attributes = {}) => buildEvent(StacticsEventTypes.healthCheck, attributes),
+});
+
 export class StacticsApiError extends Error {
   constructor(status, body) {
     super(body?.error || "Stactics API request failed");
@@ -29,6 +67,16 @@ export class StacticsClient {
       ...snakeCaseKeys(attributes),
       event_type: eventType,
     });
+  }
+
+  async trackEvent(event) {
+    const eventType = event.eventType || event.event_type;
+    if (!eventType) {
+      throw new Error("eventType is required");
+    }
+
+    const { eventType: _eventType, event_type: _event_type, ...attributes } = event;
+    return this.track(eventType, attributes);
   }
 
   async batch(events) {
@@ -74,6 +122,13 @@ function snakeCaseKeys(value) {
   }
 
   return value;
+}
+
+function buildEvent(eventType, attributes) {
+  return {
+    eventType,
+    ...attributes,
+  };
 }
 
 function toSnakeCase(key) {

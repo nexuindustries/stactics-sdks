@@ -17,25 +17,53 @@ export const appConfig: ApplicationConfig = {
 ```
 
 ```ts
-import { StacticsService } from '@stactics.io/angular';
+import { StacticsEvents, StacticsService } from '@stactics.io/angular';
 
 constructor(private readonly stactics: StacticsService) {}
 
 signup() {
-  this.stactics.track('signup', {
+  this.stactics.trackEvent(StacticsEvents.signup({
     userId: 'user_123',
+    email: 'founder@example.com',
+    displayName: 'Sam Founder',
     metadata: { plan: 'free' },
-  });
+  }));
+}
+
+login() {
+  this.stactics.trackEvent(StacticsEvents.login({
+    userId: 'user_123',
+    email: 'founder@example.com',
+    displayName: 'Sam Founder',
+    deviceId: 'install_abc',
+  }));
 }
 
 purchase() {
-  this.stactics.track('purchase', {
+  this.stactics.trackEvent(StacticsEvents.purchase({
     userId: 'user_123',
+    accountId: 'team_123',
     amountCents: 1299,
     currency: 'AUD',
-    metadata: { transactionId: 'txn_123' },
-  });
+    metadata: { transactionId: 'txn_123', productId: 'pro_monthly' },
+  }));
+}
+
+screenViewed() {
+  this.stactics.trackEvent(StacticsEvents.screenViewed({
+    userId: 'user_123',
+    metadata: { path: '/dashboard' },
+  }));
+}
+
+checkoutError() {
+  this.stactics.trackEvent(StacticsEvents.error({
+    userId: 'user_123',
+    metadata: { error: 'Payment provider timeout', context: 'checkout' },
+  }));
 }
 ```
 
 Use a `pk_...` key in Angular/browser apps.
+
+`StacticsEventTypes` exposes the default event names and `StacticsEvents` builds payloads for `signup`, `login`, `active`, `purchase`, `subscriptionStarted`, `subscriptionCancelled`, `trialStarted`, `trialConverted`, `crash`, `error`, `appOpened`, `screenViewed`, `featureUsed`, `notificationSent`, `notificationOpened`, and `healthCheck`.
