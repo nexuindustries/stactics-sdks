@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { StacticsBatchEvent, StacticsClient, StacticsEventAttributes, StacticsResult } from '@stactics.io/js';
+import { StacticsBatchEvent, StacticsClient, StacticsEventAttributes, StacticsResult } from '@stactics/js';
 import { STACTICS_CONFIG, StacticsAngularConfig } from './stactics.config';
 
 @Injectable()

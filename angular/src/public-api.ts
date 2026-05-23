@@ -4,10 +4,10 @@ export * from './lib/stactics.service';
 export {
   StacticsEvents,
   StacticsEventTypes,
-} from '@stactics.io/js';
+} from '@stactics/js';
 export type {
   StacticsBatchEvent,
   StacticsEventAttributes,
   StacticsEventType,
   StacticsResult,
-} from '@stactics.io/js';
+} from '@stactics/js';

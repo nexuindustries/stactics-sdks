@@ -12,8 +12,8 @@
     "angular"
   ],
   "scripts": {
-    "test:js": "npm test --workspace @stactics.io/js",
-    "build:angular": "npm run build --workspace @stactics.io/angular"
+    "test:js": "npm test --workspace @stactics/js",
+    "build:angular": "npm run build --workspace @stactics/angular"
   },
   "license": "MIT"
 }
