@@ -9,7 +9,7 @@ async fn track_posts_single_event() {
     Mock::given(method("POST"))
         .and(path("/v1/events"))
         .and(header("authorization", "Bearer pk_test"))
-        .and(header("user-agent", "stactics-rust/0.1.3"))
+        .and(header("user-agent", "stactics-rust/0.1.4"))
         .and(body_json(json!({
             "event_type": "signup",
             "user_id": "user_123",
@@ -48,7 +48,7 @@ async fn submit_form_preserves_field_keys() {
     Mock::given(method("POST"))
         .and(path("/v1/forms/contact/submissions"))
         .and(body_json(json!({
-            "values": {
+            "fieldData": {
                 "first_name": "Ada",
                 "consent": true
             },

@@ -172,7 +172,7 @@ async function testSubmitsFormWithoutChangingFieldKeys() {
 
   assert.equal(calls[0].url, "https://api.example.test/v1/forms/contact/submissions");
   assert.deepEqual(JSON.parse(calls[0].options.body), {
-    values: {
+    fieldData: {
       first_name: "Ada",
       consent: true,
       interests: ["Technical collaboration"],

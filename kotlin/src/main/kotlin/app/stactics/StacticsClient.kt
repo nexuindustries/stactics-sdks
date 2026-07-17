@@ -57,12 +57,12 @@ class StacticsClient @JvmOverloads constructor(
     @JvmOverloads
     fun submitForm(
         formKey: String,
-        values: Map<String, Any?>,
+        fieldData: Map<String, Any?>,
         source: String? = null,
         externalUserId: String? = null
     ): CompletableFuture<StacticsFormSubmissionResult> {
         require(formKey.isNotBlank()) { "formKey is required" }
-        val payload = linkedMapOf<String, Any?>("values" to values)
+        val payload = linkedMapOf<String, Any?>("fieldData" to fieldData)
         source?.let { payload["source"] = it }
         externalUserId?.let { payload["external_user_id"] = it }
         return send(
@@ -75,10 +75,10 @@ class StacticsClient @JvmOverloads constructor(
     @JvmOverloads
     fun submitFormBlocking(
         formKey: String,
-        values: Map<String, Any?>,
+        fieldData: Map<String, Any?>,
         source: String? = null,
         externalUserId: String? = null
-    ): StacticsFormSubmissionResult = submitForm(formKey, values, source, externalUserId).get()
+    ): StacticsFormSubmissionResult = submitForm(formKey, fieldData, source, externalUserId).get()
 
     private fun <T> send(path: String, payload: Any?, parse: (String) -> T): CompletableFuture<T> {
         return CompletableFuture.supplyAsync({
@@ -86,7 +86,7 @@ class StacticsClient @JvmOverloads constructor(
             connection.requestMethod = "POST"
             connection.setRequestProperty("Authorization", "Bearer $apiKey")
             connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("User-Agent", "stactics-android/0.1.3")
+            connection.setRequestProperty("User-Agent", "stactics-android/0.1.4")
             connection.doOutput = true
             connection.outputStream.use { it.write(Json.encode(payload).toByteArray()) }
 

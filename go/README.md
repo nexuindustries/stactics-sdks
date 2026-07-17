@@ -63,7 +63,7 @@ result, err := client.SubmitForm(
 )
 ```
 
-Form field keys and values are encoded exactly as supplied.
+Keys and values inside `fieldData` are encoded exactly as supplied.
 
 Run tests from this folder:
 

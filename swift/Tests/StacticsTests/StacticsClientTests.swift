@@ -26,7 +26,7 @@ final class StacticsClientTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.example.test/v1/events")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.3")
+        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.4")
 
         let body = try XCTUnwrap(transport.bodies.first)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -88,7 +88,7 @@ final class StacticsClientTests: XCTestCase {
 
         let result = try await client.submitForm(
             "contact",
-            values: [
+            fieldData: [
                 "first_name": "Ada",
                 "consent": true,
                 "interests": ["Technical collaboration"]
@@ -104,9 +104,9 @@ final class StacticsClientTests: XCTestCase {
 
         let body = try XCTUnwrap(transport.bodies.first)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
-        let values = json?["values"] as? [String: Any]
-        XCTAssertEqual(values?["first_name"] as? String, "Ada")
-        XCTAssertEqual(values?["consent"] as? Bool, true)
+        let fieldData = json?["fieldData"] as? [String: Any]
+        XCTAssertEqual(fieldData?["first_name"] as? String, "Ada")
+        XCTAssertEqual(fieldData?["consent"] as? Bool, true)
         XCTAssertEqual(json?["source"] as? String, "ios")
         XCTAssertEqual(json?["external_user_id"] as? String, "visitor_123")
     }

@@ -178,12 +178,12 @@ public final class StacticsClient {
 
     public func submitForm(
         _ formKey: String,
-        values: [String: Any],
+        fieldData: [String: Any],
         source: String? = nil,
         externalUserId: String? = nil
     ) async throws -> StacticsFormSubmissionResult {
         precondition(!formKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, "formKey is required")
-        var payload: [String: Any] = ["values": values]
+        var payload: [String: Any] = ["fieldData": fieldData]
         payload["source"] = source
         payload["external_user_id"] = externalUserId
         let body = try JSONSerialization.data(withJSONObject: payload)
@@ -200,7 +200,7 @@ public final class StacticsClient {
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("stactics-swift/0.1.3", forHTTPHeaderField: "User-Agent")
+        request.setValue("stactics-swift/0.1.4", forHTTPHeaderField: "User-Agent")
         request.httpBody = body
 
         let (data, response) = try await transport.send(request)

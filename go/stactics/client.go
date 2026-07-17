@@ -13,7 +13,7 @@ import (
 )
 
 const defaultHost = "https://api.stactics.io"
-const userAgent = "stactics-go/0.1.3"
+const userAgent = "stactics-go/0.1.4"
 
 type Client struct {
 	apiKey     string
@@ -104,11 +104,11 @@ func (client *Client) Batch(ctx context.Context, events []Event) (*Result, error
 func (client *Client) SubmitForm(
 	ctx context.Context,
 	formKey string,
-	values map[string]any,
+	fieldData map[string]any,
 	source string,
 	externalUserID string,
 ) (*FormSubmissionResult, error) {
-	payload := map[string]any{"values": values}
+	payload := map[string]any{"fieldData": fieldData}
 	if source != "" {
 		payload["source"] = source
 	}

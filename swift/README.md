@@ -3,7 +3,7 @@
 Swift Package Manager library for Apple-platform apps and server-side Swift.
 
 ```swift
-.package(url: "https://github.com/nexuindustries/stactics-sdks", from: "0.1.3")
+.package(url: "https://github.com/nexuindustries/stactics-sdks", from: "0.1.4")
 ```
 
 ```swift
@@ -63,7 +63,7 @@ Submit form values without retrieving form definitions through the SDK:
 ```swift
 let result = try await client.submitForm(
     "contact",
-    values: [
+    fieldData: [
         "name": "Ada Founder",
         "email": "ada@example.com",
         "message": "I would like to discuss a technical collaboration.",

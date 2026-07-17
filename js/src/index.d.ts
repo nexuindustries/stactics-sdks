@@ -122,7 +122,7 @@ export class StacticsClient {
   batch(events: StacticsBatchEvent[]): Promise<StacticsResult>;
   submitForm(
     formKey: string,
-    values: Record<string, StacticsFormValue>,
+    fieldData: Record<string, StacticsFormValue>,
     options?: StacticsFormSubmissionOptions
   ): Promise<StacticsFormSubmissionResult>;
 }

@@ -89,7 +89,7 @@ class StacticsClientTest < Minitest::Test
     assert_equal "/v1/forms/contact/submissions", transport.requests.first.fetch(:path)
     assert_equal(
       {
-        "values" => {
+        "fieldData" => {
           "first_name" => "Ada",
           "consent" => true,
           "interests" => [ "Technical collaboration" ]

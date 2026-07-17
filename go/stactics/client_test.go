@@ -17,7 +17,7 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		if got := r.Header.Get("Authorization"); got != "Bearer pk_test" {
 			t.Fatalf("authorization = %s", got)
 		}
-		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.3" {
+		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.4" {
 			t.Fatalf("user agent = %s", got)
 		}
 		if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
@@ -80,8 +80,8 @@ func TestSubmitFormPreservesFieldKeys(t *testing.T) {
 	if !result.Accepted || result.SubmissionID != "submission_123" || result.Message == nil || *result.Message != "Thanks" {
 		t.Fatalf("result = %#v", result)
 	}
-	values := requestBody["values"].(map[string]any)
-	if values["first_name"] != "Ada" || values["consent"] != true {
+	fieldData := requestBody["fieldData"].(map[string]any)
+	if fieldData["first_name"] != "Ada" || fieldData["consent"] != true {
 		t.Fatalf("request body = %#v", requestBody)
 	}
 	if requestBody["source"] != "go" || requestBody["external_user_id"] != "visitor_123" {

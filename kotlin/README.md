@@ -3,7 +3,7 @@
 Android/JVM client for the public Stactics ingest API. Kotlin and Java callers use the same `app.stactics:stactics-android` artifact.
 
 ```kotlin
-implementation("app.stactics:stactics-android:0.1.3")
+implementation("app.stactics:stactics-android:0.1.4")
 ```
 
 ```kotlin
@@ -67,7 +67,7 @@ Submit form values without retrieving form definitions through the SDK:
 ```kotlin
 val result = stactics.submitForm(
     formKey = "contact",
-    values = mapOf(
+    fieldData = mapOf(
         "name" to "Ada Founder",
         "email" to "ada@example.com",
         "message" to "I would like to discuss a technical collaboration.",

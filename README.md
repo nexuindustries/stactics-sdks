@@ -33,7 +33,7 @@ Common fields:
 - Revenue: `amount_cents` / `amountCents` and `currency`
 - Event details: `metadata`
 
-Form submissions preserve the configured field keys exactly and are never sent through event batching APIs.
+Form submissions send the configured field map as `fieldData` and preserve its keys exactly and are never sent through event batching APIs.
 
 Default event types:
 

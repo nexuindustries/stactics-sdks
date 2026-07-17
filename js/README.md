@@ -59,7 +59,7 @@ const result = await stactics.submitForm("contact", {
 });
 ```
 
-Form field keys and nested values are sent exactly as supplied. Form submissions are not added to event batches or persistent analytics queues.
+Keys and values inside `fieldData` are sent exactly as supplied. Form submissions are not added to event batches or persistent analytics queues.
 
 Use `pk_...` in browsers and `sk_...` in trusted server-side JavaScript.
 

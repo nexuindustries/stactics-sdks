@@ -35,10 +35,10 @@ export class StacticsService {
 
   submitForm(
     formKey: string,
-    values: Record<string, StacticsFormValue>,
+    fieldData: Record<string, StacticsFormValue>,
     options: StacticsFormSubmissionOptions = {}
   ): Promise<StacticsFormSubmissionResult> {
-    return this.client.submitForm(formKey, values, options);
+    return this.client.submitForm(formKey, fieldData, options);
   }
 
   private withDefaults<T extends StacticsEventAttributes>(attributes: T): T {

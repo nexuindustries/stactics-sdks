@@ -85,15 +85,15 @@ export class StacticsClient {
     });
   }
 
-  async submitForm(formKey, values, options = {}) {
+  async submitForm(formKey, fieldData, options = {}) {
     if (!formKey) {
       throw new Error("formKey is required");
     }
-    if (!values || typeof values !== "object" || Array.isArray(values)) {
-      throw new Error("values must be an object");
+    if (!fieldData || typeof fieldData !== "object" || Array.isArray(fieldData)) {
+      throw new Error("fieldData must be an object");
     }
 
-    const payload = { values };
+    const payload = { fieldData };
     if (options.source !== undefined) {
       payload.source = options.source;
     }
@@ -120,7 +120,7 @@ export class StacticsClient {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
-        "User-Agent": "stactics-js/0.1.3",
+        "User-Agent": "stactics-js/0.1.4",
       },
       body: JSON.stringify(payload),
     });

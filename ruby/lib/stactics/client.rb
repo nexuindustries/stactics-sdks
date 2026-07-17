@@ -36,11 +36,11 @@ module Stactics
       request("/v1/events/batch", payload)
     end
 
-    def submit_form(form_key, values, source: nil, external_user_id: nil)
+    def submit_form(form_key, field_data, source: nil, external_user_id: nil)
       raise ArgumentError, "form_key is required" if form_key.to_s.strip.empty?
-      raise ArgumentError, "values must be a hash" unless values.is_a?(Hash)
+      raise ArgumentError, "field_data must be a hash" unless field_data.is_a?(Hash)
 
-      payload = { "values" => stringify_form_values(values) }
+      payload = { "fieldData" => stringify_form_values(field_data) }
       payload["source"] = source unless source.nil?
       payload["external_user_id"] = external_user_id unless external_user_id.nil?
       result = request("/v1/forms/#{URI.encode_www_form_component(form_key.to_s)}/submissions", payload)

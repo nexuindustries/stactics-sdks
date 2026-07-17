@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 const DEFAULT_HOST: &str = "https://api.stactics.io";
-const USER_AGENT_VALUE: &str = "stactics-rust/0.1.3";
+const USER_AGENT_VALUE: &str = "stactics-rust/0.1.4";
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -58,11 +58,11 @@ impl Client {
     pub async fn submit_form(
         &self,
         form_key: &str,
-        values: Value,
+        field_data: Value,
         source: Option<&str>,
         external_user_id: Option<&str>,
     ) -> Result<FormSubmissionResponse> {
-        let mut payload = json!({ "values": values });
+        let mut payload = json!({ "fieldData": field_data });
         if let Some(source) = source {
             payload["source"] = json!(source);
         }
