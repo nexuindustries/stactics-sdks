@@ -1,5 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
-import { StacticsBatchEvent, StacticsClient, StacticsEventAttributes, StacticsResult } from '@stactics/js';
+import {
+  StacticsBatchEvent,
+  StacticsClient,
+  StacticsEventAttributes,
+  StacticsFormSubmissionOptions,
+  StacticsFormSubmissionResult,
+  StacticsFormValue,
+  StacticsResult,
+} from '@stactics/js';
 import { STACTICS_CONFIG, StacticsAngularConfig } from './stactics.config';
 
 @Injectable()
@@ -23,6 +31,14 @@ export class StacticsService {
 
   batch(events: StacticsBatchEvent[]): Promise<StacticsResult> {
     return this.client.batch(events.map((event) => this.withDefaults(event)));
+  }
+
+  submitForm(
+    formKey: string,
+    values: Record<string, StacticsFormValue>,
+    options: StacticsFormSubmissionOptions = {}
+  ): Promise<StacticsFormSubmissionResult> {
+    return this.client.submitForm(formKey, values, options);
   }
 
   private withDefaults<T extends StacticsEventAttributes>(attributes: T): T {

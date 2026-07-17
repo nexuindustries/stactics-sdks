@@ -15,7 +15,7 @@ class StacticsClient @JvmOverloads constructor(
     private val host = host.trimEnd('/')
 
     fun track(event: StacticsEvent): CompletableFuture<StacticsResult> {
-        return send("/v1/events", event)
+        return send("/v1/events", event, StacticsResult::fromJson)
     }
 
     @JvmOverloads
@@ -49,18 +49,44 @@ class StacticsClient @JvmOverloads constructor(
     ): StacticsResult = track(eventType, userId, environment, amountCents, currency, metadata).get()
 
     fun batch(events: List<StacticsEvent>): CompletableFuture<StacticsResult> {
-        return send("/v1/events/batch", mapOf("events" to events.map { it.toMap() }))
+        return send("/v1/events/batch", mapOf("events" to events.map { it.toMap() }), StacticsResult::fromJson)
     }
 
     fun batchBlocking(events: List<StacticsEvent>): StacticsResult = batch(events).get()
 
-    private fun send(path: String, payload: Any?): CompletableFuture<StacticsResult> {
+    @JvmOverloads
+    fun submitForm(
+        formKey: String,
+        values: Map<String, Any?>,
+        source: String? = null,
+        externalUserId: String? = null
+    ): CompletableFuture<StacticsFormSubmissionResult> {
+        require(formKey.isNotBlank()) { "formKey is required" }
+        val payload = linkedMapOf<String, Any?>("values" to values)
+        source?.let { payload["source"] = it }
+        externalUserId?.let { payload["external_user_id"] = it }
+        return send(
+            "/v1/forms/$formKey/submissions",
+            payload,
+            StacticsFormSubmissionResult::fromJson
+        )
+    }
+
+    @JvmOverloads
+    fun submitFormBlocking(
+        formKey: String,
+        values: Map<String, Any?>,
+        source: String? = null,
+        externalUserId: String? = null
+    ): StacticsFormSubmissionResult = submitForm(formKey, values, source, externalUserId).get()
+
+    private fun <T> send(path: String, payload: Any?, parse: (String) -> T): CompletableFuture<T> {
         return CompletableFuture.supplyAsync({
             val connection = URI.create("$host$path").toURL().openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
             connection.setRequestProperty("Authorization", "Bearer $apiKey")
             connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("User-Agent", "stactics-android/0.1.1")
+            connection.setRequestProperty("User-Agent", "stactics-android/0.1.3")
             connection.doOutput = true
             connection.outputStream.use { it.write(Json.encode(payload).toByteArray()) }
 
@@ -69,7 +95,7 @@ class StacticsClient @JvmOverloads constructor(
             if (status !in 200..299) {
                 throw StacticsApiException(status, responseBody)
             }
-            StacticsResult.fromJson(responseBody)
+            parse(responseBody)
         }, executor)
     }
 
@@ -151,6 +177,22 @@ data class StacticsResult(val accepted: Boolean, val acceptedCount: Int) {
     }
 }
 
+data class StacticsFormSubmissionResult(
+    val accepted: Boolean,
+    val submissionId: String?,
+    val submittedAt: String?,
+    val message: String?
+) {
+    companion object {
+        fun fromJson(body: String): StacticsFormSubmissionResult = StacticsFormSubmissionResult(
+            accepted = Regex("\"accepted\"\\s*:\\s*true").containsMatchIn(body),
+            submissionId = Json.stringField(body, "submission_id"),
+            submittedAt = Json.stringField(body, "submitted_at"),
+            message = Json.stringField(body, "message")
+        )
+    }
+}
+
 class StacticsApiException(val statusCode: Int, body: String) : IOException(body)
 
 private object Json {
@@ -170,4 +212,12 @@ private object Json {
         .replace("\\", "\\\\")
         .replace("\"", "\\\"")
         .replace("\n", "\\n")
+
+    fun stringField(body: String, name: String): String? {
+        val match = Regex("\"${Regex.escape(name)}\"\\s*:\\s*\"((?:\\\\.|[^\"])*)\"").find(body) ?: return null
+        return match.groupValues[1]
+            .replace("\\\"", "\"")
+            .replace("\\n", "\n")
+            .replace("\\\\", "\\")
+    }
 }

@@ -49,6 +49,22 @@ client.track(Event::new("error")
 
 For revenue events, send both `amount_cents` and `currency`. Put transaction IDs, product IDs, screen names, feature names, error details, and notification details in `metadata`.
 
+Submit form values without retrieving form definitions through the SDK:
+
+```rust
+let result = client.submit_form(
+    "contact",
+    json!({
+        "name": "Ada Founder",
+        "email": "ada@example.com",
+        "message": "I would like to discuss a technical collaboration.",
+        "consent": true
+    }),
+    Some("rust"),
+    Some("visitor_123"),
+).await?;
+```
+
 Run tests from this folder:
 
 ```sh

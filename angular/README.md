@@ -66,4 +66,18 @@ checkoutError() {
 
 Use a `pk_...` key in Angular/browser apps.
 
+Submit form values directly through the service; the Angular application remains responsible for retrieving and rendering the form definition:
+
+```ts
+await this.stactics.submitForm('contact', {
+  name: 'Ada Founder',
+  email: 'ada@example.com',
+  message: 'I would like to discuss a technical collaboration.',
+  consent: true,
+}, {
+  source: 'web',
+  externalUserId: 'visitor_123',
+});
+```
+
 `StacticsEventTypes` exposes the default event names and `StacticsEvents` builds payloads for `signup`, `login`, `active`, `purchase`, `subscriptionStarted`, `subscriptionCancelled`, `trialStarted`, `trialConverted`, `crash`, `error`, `appOpened`, `screenViewed`, `featureUsed`, `notificationSent`, `notificationOpened`, and `healthCheck`.

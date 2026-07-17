@@ -26,7 +26,7 @@ final class StacticsClientTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.example.test/v1/events")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Authorization"), "Bearer pk_test")
         XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "Content-Type"), "application/json")
-        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.1")
+        XCTAssertEqual(transport.requests.first?.value(forHTTPHeaderField: "User-Agent"), "stactics-swift/0.1.3")
 
         let body = try XCTUnwrap(transport.bodies.first)
         let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
@@ -73,6 +73,42 @@ final class StacticsClientTests: XCTestCase {
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
+    }
+
+    func testSubmitFormPreservesFieldKeys() async throws {
+        let transport = RecordingTransport(
+            statusCode: 201,
+            body: #"{"accepted":true,"submission_id":"submission_123","submitted_at":"2026-07-17T04:00:00Z","message":"Thanks"}"#
+        )
+        let client = StacticsClient(
+            apiKey: "pk_test",
+            host: URL(string: "https://api.example.test")!,
+            transport: transport
+        )
+
+        let result = try await client.submitForm(
+            "contact",
+            values: [
+                "first_name": "Ada",
+                "consent": true,
+                "interests": ["Technical collaboration"]
+            ],
+            source: "ios",
+            externalUserId: "visitor_123"
+        )
+
+        XCTAssertTrue(result.accepted)
+        XCTAssertEqual(result.submissionId, "submission_123")
+        XCTAssertEqual(result.message, "Thanks")
+        XCTAssertEqual(transport.requests.first?.url?.absoluteString, "https://api.example.test/v1/forms/contact/submissions")
+
+        let body = try XCTUnwrap(transport.bodies.first)
+        let json = try JSONSerialization.jsonObject(with: body) as? [String: Any]
+        let values = json?["values"] as? [String: Any]
+        XCTAssertEqual(values?["first_name"] as? String, "Ada")
+        XCTAssertEqual(values?["consent"] as? Bool, true)
+        XCTAssertEqual(json?["source"] as? String, "ios")
+        XCTAssertEqual(json?["external_user_id"] as? String, "visitor_123")
     }
 }
 

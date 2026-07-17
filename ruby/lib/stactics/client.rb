@@ -14,6 +14,7 @@ module Stactics
   end
 
   Result = Struct.new(:accepted?, :accepted_count, :body, keyword_init: true)
+  FormSubmissionResult = Struct.new(:accepted?, :submission_id, :submitted_at, :message, :body, keyword_init: true)
 
   class Client
     def initialize(api_key:, host: DEFAULT_HOST, timeout: 5, transport: nil)
@@ -33,6 +34,24 @@ module Stactics
     def batch(events)
       payload = { "events" => events.map { |event| stringify_keys(event) } }
       request("/v1/events/batch", payload)
+    end
+
+    def submit_form(form_key, values, source: nil, external_user_id: nil)
+      raise ArgumentError, "form_key is required" if form_key.to_s.strip.empty?
+      raise ArgumentError, "values must be a hash" unless values.is_a?(Hash)
+
+      payload = { "values" => stringify_form_values(values) }
+      payload["source"] = source unless source.nil?
+      payload["external_user_id"] = external_user_id unless external_user_id.nil?
+      result = request("/v1/forms/#{URI.encode_www_form_component(form_key.to_s)}/submissions", payload)
+
+      FormSubmissionResult.new(
+        accepted?: result.accepted?,
+        submission_id: result.body["submission_id"],
+        submitted_at: result.body["submitted_at"],
+        message: result.body["message"],
+        body: result.body
+      )
     end
 
     private
@@ -87,6 +106,19 @@ module Stactics
         end
       when Array
         value.map { |item| stringify_keys(item) }
+      else
+        value
+      end
+    end
+
+    def stringify_form_values(value)
+      case value
+      when Hash
+        value.each_with_object({}) do |(key, nested_value), memo|
+          memo[key.to_s] = stringify_form_values(nested_value)
+        end
+      when Array
+        value.map { |item| stringify_form_values(item) }
       else
         value
       end

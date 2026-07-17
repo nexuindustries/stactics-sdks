@@ -46,6 +46,25 @@ _, err = client.Track(context.Background(), "error", stactics.Event{
 
 For revenue events, send both `AmountCents` and `Currency`. Put transaction IDs, product IDs, screen names, feature names, error details, and notification details in `Metadata`.
 
+Submit form values without retrieving form definitions through the SDK:
+
+```go
+result, err := client.SubmitForm(
+    context.Background(),
+    "contact",
+    map[string]any{
+        "name": "Ada Founder",
+        "email": "ada@example.com",
+        "message": "I would like to discuss a technical collaboration.",
+        "consent": true,
+    },
+    "go",
+    "visitor_123",
+)
+```
+
+Form field keys and values are encoded exactly as supplied.
+
 Run tests from this folder:
 
 ```sh

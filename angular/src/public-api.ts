@@ -9,5 +9,8 @@ export type {
   StacticsBatchEvent,
   StacticsEventAttributes,
   StacticsEventType,
+  StacticsFormSubmissionOptions,
+  StacticsFormSubmissionResult,
+  StacticsFormValue,
   StacticsResult,
 } from '@stactics/js';

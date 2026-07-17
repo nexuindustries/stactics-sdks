@@ -144,6 +144,56 @@ async function testRaisesApiErrors() {
   );
 }
 
+async function testSubmitsFormWithoutChangingFieldKeys() {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url, options });
+    return response(201, {
+      accepted: true,
+      submission_id: "submission_123",
+      submitted_at: "2026-07-17T04:00:00Z",
+      message: "Thanks",
+    });
+  };
+  const client = new StacticsClient({
+    apiKey: "pk_test",
+    host: "https://api.example.test",
+    fetch: fetchImpl,
+  });
+
+  const result = await client.submitForm("contact", {
+    first_name: "Ada",
+    consent: true,
+    interests: ["Technical collaboration"],
+  }, {
+    source: "web",
+    externalUserId: "visitor_123",
+  });
+
+  assert.equal(calls[0].url, "https://api.example.test/v1/forms/contact/submissions");
+  assert.deepEqual(JSON.parse(calls[0].options.body), {
+    values: {
+      first_name: "Ada",
+      consent: true,
+      interests: ["Technical collaboration"],
+    },
+    source: "web",
+    external_user_id: "visitor_123",
+  });
+  assert.deepEqual(result, {
+    accepted: true,
+    submissionId: "submission_123",
+    submittedAt: "2026-07-17T04:00:00Z",
+    message: "Thanks",
+    body: {
+      accepted: true,
+      submission_id: "submission_123",
+      submitted_at: "2026-07-17T04:00:00Z",
+      message: "Thanks",
+    },
+  });
+}
+
 function response(status, body) {
   return {
     ok: status >= 200 && status < 300,
@@ -159,3 +209,4 @@ await testSendsBatch();
 await testTracksBuiltEventPayload();
 testBuildsDefaultEventPayloads();
 await testRaisesApiErrors();
+await testSubmitsFormWithoutChangingFieldKeys();

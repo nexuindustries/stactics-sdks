@@ -45,6 +45,22 @@ await stactics.trackEvent(StacticsEvents.error({
 }));
 ```
 
+Submit form values without fetching form definitions through the SDK:
+
+```js
+const result = await stactics.submitForm("contact", {
+  name: "Ada Founder",
+  email: "ada@example.com",
+  message: "I would like to discuss a technical collaboration.",
+  consent: true,
+}, {
+  source: "web",
+  externalUserId: "visitor_123",
+});
+```
+
+Form field keys and nested values are sent exactly as supplied. Form submissions are not added to event batches or persistent analytics queues.
+
 Use `pk_...` in browsers and `sk_...` in trusted server-side JavaScript.
 
 `StacticsEventTypes` exposes the default event names and `StacticsEvents` builds typed payloads for `signup`, `login`, `active`, `purchase`, `subscriptionStarted`, `subscriptionCancelled`, `trialStarted`, `trialConverted`, `crash`, `error`, `appOpened`, `screenViewed`, `featureUsed`, `notificationSent`, `notificationOpened`, and `healthCheck`.

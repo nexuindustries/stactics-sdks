@@ -49,4 +49,22 @@ client.track(
 
 Use a `sk_...` key for server-side Ruby apps.
 
+Submit form values without retrieving form definitions through the SDK:
+
+```ruby
+client.submit_form(
+  "contact",
+  {
+    name: "Ada Founder",
+    email: "ada@example.com",
+    message: "I would like to discuss a technical collaboration.",
+    consent: true
+  },
+  source: "ruby",
+  external_user_id: "visitor_123"
+)
+```
+
+Form field keys are preserved rather than converted to event-style snake case.
+
 For revenue events, send both `amount_cents` and `currency`. Put transaction IDs, product IDs, screen names, feature names, error details, and notification details in `metadata`.

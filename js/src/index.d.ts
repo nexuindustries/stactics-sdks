@@ -10,6 +10,23 @@ export interface StacticsResult {
   body: Record<string, unknown>;
 }
 
+export type StacticsFormValue = string | number | boolean | null | StacticsFormValue[] | {
+  [key: string]: StacticsFormValue;
+};
+
+export interface StacticsFormSubmissionOptions {
+  source?: string;
+  externalUserId?: string;
+}
+
+export interface StacticsFormSubmissionResult {
+  accepted: boolean;
+  submissionId?: string;
+  submittedAt?: string;
+  message: string | null;
+  body: Record<string, unknown>;
+}
+
 export type StacticsEventType =
   | 'signup'
   | 'login'
@@ -103,4 +120,9 @@ export class StacticsClient {
   track(eventType: StacticsEventType | string, attributes?: StacticsEventAttributes): Promise<StacticsResult>;
   trackEvent(event: StacticsBatchEvent): Promise<StacticsResult>;
   batch(events: StacticsBatchEvent[]): Promise<StacticsResult>;
+  submitForm(
+    formKey: string,
+    values: Record<string, StacticsFormValue>,
+    options?: StacticsFormSubmissionOptions
+  ): Promise<StacticsFormSubmissionResult>;
 }

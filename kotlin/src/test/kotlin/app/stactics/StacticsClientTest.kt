@@ -27,7 +27,7 @@ class StacticsClientTest {
             assertEquals("/v1/events", server.path)
             assertEquals("Bearer pk_test", server.headers["Authorization"]?.first())
             assertEquals("application/json", server.headers["Content-Type"]?.first())
-            assertEquals("stactics-android/0.1.1", server.headers["User-agent"]?.first())
+            assertEquals("stactics-android/0.1.3", server.headers["User-agent"]?.first())
             assertTrue(server.body.contains(""""event_type":"signup""""))
             assertTrue(server.body.contains(""""user_id":"user_123""""))
             assertTrue(server.body.contains(""""amount_cents":1299"""))
@@ -54,6 +54,35 @@ class StacticsClientTest {
             assertEquals("/v1/events/batch", server.path)
             assertTrue(server.body.contains(""""events""""))
             assertTrue(server.body.contains(""""device_id":"install_abc""""))
+        } finally {
+            server.stop()
+        }
+    }
+
+    @Test
+    fun submitFormPreservesFieldKeys() {
+        val server = TestServer(
+            """{"accepted":true,"submission_id":"submission_123","submitted_at":"2026-07-17T04:00:00Z","message":"Thanks"}"""
+        )
+        server.start()
+        try {
+            val client = StacticsClient(apiKey = "pk_test", host = server.url)
+            val result = client.submitFormBlocking(
+                formKey = "contact",
+                values = mapOf("first_name" to "Ada", "consent" to true),
+                source = "android",
+                externalUserId = "visitor_123"
+            )
+
+            assertTrue(result.accepted)
+            assertEquals("submission_123", result.submissionId)
+            assertEquals("Thanks", result.message)
+            assertEquals("/v1/forms/contact/submissions", server.path)
+            assertTrue(server.body.contains(""""values":{"""))
+            assertTrue(server.body.contains(""""first_name":"Ada"""))
+            assertTrue(server.body.contains(""""consent":true"""))
+            assertTrue(server.body.contains(""""source":"android"""))
+            assertTrue(server.body.contains(""""external_user_id":"visitor_123"""))
         } finally {
             server.stop()
         }

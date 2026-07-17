@@ -38,6 +38,20 @@ public struct StacticsResult: Decodable, Equatable {
     }
 }
 
+public struct StacticsFormSubmissionResult: Decodable, Equatable {
+    public let accepted: Bool
+    public let submissionId: String
+    public let submittedAt: String
+    public let message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case accepted
+        case submissionId = "submission_id"
+        case submittedAt = "submitted_at"
+        case message
+    }
+}
+
 public struct StacticsEvent: Encodable, Equatable {
     public var eventType: String
     public var userId: String?
@@ -162,21 +176,39 @@ public final class StacticsClient {
         try await request(path: "/v1/events/batch", payload: BatchPayload(events: events))
     }
 
-    private func request<T: Encodable>(path: String, payload: T) async throws -> StacticsResult {
+    public func submitForm(
+        _ formKey: String,
+        values: [String: Any],
+        source: String? = nil,
+        externalUserId: String? = nil
+    ) async throws -> StacticsFormSubmissionResult {
+        precondition(!formKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, "formKey is required")
+        var payload: [String: Any] = ["values": values]
+        payload["source"] = source
+        payload["external_user_id"] = externalUserId
+        let body = try JSONSerialization.data(withJSONObject: payload)
+        return try await send(path: "/v1/forms/\(formKey)/submissions", body: body)
+    }
+
+    private func request<T: Encodable, R: Decodable>(path: String, payload: T) async throws -> R {
+        try await send(path: path, body: encoder.encode(payload))
+    }
+
+    private func send<R: Decodable>(path: String, body: Data) async throws -> R {
         let base = host.absoluteString.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         var request = URLRequest(url: URL(string: "\(base)\(path)")!)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("stactics-swift/0.1.1", forHTTPHeaderField: "User-Agent")
-        request.httpBody = try encoder.encode(payload)
+        request.setValue("stactics-swift/0.1.3", forHTTPHeaderField: "User-Agent")
+        request.httpBody = body
 
         let (data, response) = try await transport.send(request)
         guard (200..<300).contains(response.statusCode) else {
             throw StacticsAPIError(statusCode: response.statusCode, body: errorMessage(from: data))
         }
 
-        return try decoder.decode(StacticsResult.self, from: data)
+        return try decoder.decode(R.self, from: data)
     }
 
     private func errorMessage(from data: Data) -> String {

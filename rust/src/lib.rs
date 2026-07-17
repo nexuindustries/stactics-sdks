@@ -1,9 +1,10 @@
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 const DEFAULT_HOST: &str = "https://api.stactics.io";
-const USER_AGENT_VALUE: &str = "stactics-rust/0.1.1";
+const USER_AGENT_VALUE: &str = "stactics-rust/0.1.3";
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -15,6 +16,8 @@ pub enum Error {
     Http(#[from] reqwest::Error),
     #[error(transparent)]
     Header(#[from] reqwest::header::InvalidHeaderValue),
+    #[error(transparent)]
+    Json(#[from] serde_json::Error),
 }
 
 #[derive(Clone)]
@@ -48,10 +51,33 @@ impl Client {
     }
 
     pub async fn batch(&self, events: Vec<Event>) -> Result<Response> {
-        self.request("/v1/events/batch", &json!({ "events": events })).await
+        self.request("/v1/events/batch", &json!({ "events": events }))
+            .await
     }
 
-    async fn request<T: Serialize + ?Sized>(&self, path: &str, payload: &T) -> Result<Response> {
+    pub async fn submit_form(
+        &self,
+        form_key: &str,
+        values: Value,
+        source: Option<&str>,
+        external_user_id: Option<&str>,
+    ) -> Result<FormSubmissionResponse> {
+        let mut payload = json!({ "values": values });
+        if let Some(source) = source {
+            payload["source"] = json!(source);
+        }
+        if let Some(external_user_id) = external_user_id {
+            payload["external_user_id"] = json!(external_user_id);
+        }
+        self.request(&format!("/v1/forms/{form_key}/submissions"), &payload)
+            .await
+    }
+
+    async fn request<T: Serialize + ?Sized, R: DeserializeOwned>(
+        &self,
+        path: &str,
+        payload: &T,
+    ) -> Result<R> {
         let response = self
             .http
             .post(format!("{}{}", self.host, path))
@@ -69,7 +95,7 @@ impl Client {
             });
         }
 
-        Ok(serde_json::from_value(body).unwrap_or_default())
+        Ok(serde_json::from_value(body)?)
     }
 
     fn headers(&self) -> Result<HeaderMap> {
@@ -179,4 +205,12 @@ impl Event {
 pub struct Response {
     pub accepted: bool,
     pub accepted_count: u64,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+pub struct FormSubmissionResponse {
+    pub accepted: bool,
+    pub submission_id: String,
+    pub submitted_at: String,
+    pub message: Option<String>,
 }

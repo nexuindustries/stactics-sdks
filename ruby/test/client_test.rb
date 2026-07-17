@@ -66,6 +66,41 @@ class StacticsClientTest < Minitest::Test
     assert_equal({ "error" => "event type is not allowed" }, error.body)
   end
 
+  def test_submits_form_without_changing_field_keys
+    body = {
+      accepted: true,
+      submission_id: "submission_123",
+      submitted_at: "2026-07-17T04:00:00Z",
+      message: "Thanks"
+    }
+    transport = FakeTransport.new(FakeResponse.new("201", body.to_json))
+    client = Stactics::Client.new(api_key: "sk_test", transport: transport)
+
+    result = client.submit_form(
+      "contact",
+      { first_name: "Ada", consent: true, interests: [ "Technical collaboration" ] },
+      source: "ruby",
+      external_user_id: "visitor_123"
+    )
+
+    assert result.accepted?
+    assert_equal "submission_123", result.submission_id
+    assert_equal "Thanks", result.message
+    assert_equal "/v1/forms/contact/submissions", transport.requests.first.fetch(:path)
+    assert_equal(
+      {
+        "values" => {
+          "first_name" => "Ada",
+          "consent" => true,
+          "interests" => [ "Technical collaboration" ]
+        },
+        "source" => "ruby",
+        "external_user_id" => "visitor_123"
+      },
+      transport.requests.first.fetch(:payload)
+    )
+  end
+
   class FakeTransport
     attr_reader :requests
 

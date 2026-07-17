@@ -17,7 +17,7 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		if got := r.Header.Get("Authorization"); got != "Bearer pk_test" {
 			t.Fatalf("authorization = %s", got)
 		}
-		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.1" {
+		if got := r.Header.Get("User-Agent"); got != "stactics-go/0.1.3" {
 			t.Fatalf("user agent = %s", got)
 		}
 		if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
@@ -47,6 +47,44 @@ func TestTrackPostsSingleEvent(t *testing.T) {
 		t.Fatalf("request body = %#v", requestBody)
 	}
 	if requestBody["amount_cents"] != float64(1299) || requestBody["currency"] != "AUD" {
+		t.Fatalf("request body = %#v", requestBody)
+	}
+}
+
+func TestSubmitFormPreservesFieldKeys(t *testing.T) {
+	var requestBody map[string]any
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v1/forms/contact/submissions" {
+			t.Fatalf("path = %s", r.URL.Path)
+		}
+		if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		w.WriteHeader(http.StatusCreated)
+		_, _ = w.Write([]byte(`{"accepted":true,"submission_id":"submission_123","submitted_at":"2026-07-17T04:00:00Z","message":"Thanks"}`))
+	}))
+	defer server.Close()
+
+	client := NewClient("pk_test", WithHost(server.URL))
+	result, err := client.SubmitForm(
+		context.Background(),
+		"contact",
+		map[string]any{"first_name": "Ada", "consent": true},
+		"go",
+		"visitor_123",
+	)
+
+	if err != nil {
+		t.Fatalf("SubmitForm returned error: %v", err)
+	}
+	if !result.Accepted || result.SubmissionID != "submission_123" || result.Message == nil || *result.Message != "Thanks" {
+		t.Fatalf("result = %#v", result)
+	}
+	values := requestBody["values"].(map[string]any)
+	if values["first_name"] != "Ada" || values["consent"] != true {
+		t.Fatalf("request body = %#v", requestBody)
+	}
+	if requestBody["source"] != "go" || requestBody["external_user_id"] != "visitor_123" {
 		t.Fatalf("request body = %#v", requestBody)
 	}
 }

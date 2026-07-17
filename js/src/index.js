@@ -85,13 +85,42 @@ export class StacticsClient {
     });
   }
 
+  async submitForm(formKey, values, options = {}) {
+    if (!formKey) {
+      throw new Error("formKey is required");
+    }
+    if (!values || typeof values !== "object" || Array.isArray(values)) {
+      throw new Error("values must be an object");
+    }
+
+    const payload = { values };
+    if (options.source !== undefined) {
+      payload.source = options.source;
+    }
+    if (options.externalUserId !== undefined) {
+      payload.external_user_id = options.externalUserId;
+    }
+
+    const result = await this.request(
+      `/v1/forms/${encodeURIComponent(formKey)}/submissions`,
+      payload
+    );
+    return {
+      accepted: result.accepted,
+      submissionId: result.body.submission_id,
+      submittedAt: result.body.submitted_at,
+      message: result.body.message ?? null,
+      body: result.body,
+    };
+  }
+
   async request(path, payload) {
     const response = await this.fetch(`${this.host}${path}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
-        "User-Agent": "stactics-js/0.1.1",
+        "User-Agent": "stactics-js/0.1.3",
       },
       body: JSON.stringify(payload),
     });

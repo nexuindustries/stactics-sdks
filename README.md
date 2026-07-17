@@ -6,6 +6,9 @@ SDKs target the public ingest API only:
 
 - `POST /v1/events`
 - `POST /v1/events/batch`
+- `POST /v1/forms/:form_key/submissions`
+
+SDKs submit form values only. Form-definition retrieval, rendering, and management remain application responsibilities.
 
 Packages:
 
@@ -29,6 +32,8 @@ Common fields:
 - App context: `platform`, `build_version` / `buildVersion`, `environment_id` / `environmentId`
 - Revenue: `amount_cents` / `amountCents` and `currency`
 - Event details: `metadata`
+
+Form submissions preserve the configured field keys exactly and are never sent through event batching APIs.
 
 Default event types:
 
